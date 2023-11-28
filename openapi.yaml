@@ -1,0 +1,76 @@
+openapi: 3.0.2
+info:
+    title: python-ticket-gate
+    version: 1.0.0
+paths:
+    /address:
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddressRequest'
+                required: true
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Response'
+                            examples:
+                                Response:
+                                    value:
+                                        message: received with success
+                    description: Ip data saved in database
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                            examples:
+                                RequestError:
+                                    value:
+                                        message: Could not receive request
+                    description: Bad Request
+                default:
+                '500':
+                    description: Server Error
+components:
+    schemas:
+        AddressRequest:
+            description: ''
+            type: object
+            properties:
+                country:
+                    description: ''
+                    type: string
+                state:
+                    description: ''
+                    type: string
+                city:
+                    description: ''
+                    type: string
+                street:
+                    description: ''
+                    type: string
+                number:
+                    description: ''
+                    type: string
+                zipcode:
+                    description: ''
+                    type: string
+                
+        Response:
+            description: ''
+            type: object
+            properties:
+                message:
+                  description: ''
+                  type: string
+        Error:
+            description: ''
+            type: object
+            properties:
+                message:
+                  description: ''
+                  type: string

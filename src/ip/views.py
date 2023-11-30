@@ -4,6 +4,9 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
 
+from src.ip.models import RejectList
+
+
 @csrf_exempt
 def http_header_reader(request):
     if request.method == 'POST' or 'GET':
@@ -54,7 +57,23 @@ def address_ip_checker(ip_address):
 def save_zip_code(request):
     try:
         data = json.loads(request.body.decode('utf-8'))
-        zip_code = data.get('zip_code')
+        ip_address = data.get('ip_address')
 
-        if zip_code:
-            ip_suspect, created =
+        if ip_address:
+            ip_data = address_ip_checker(ip_address)
+            zip_code = ip_data.get('zip_code')
+
+            if zip_code:
+                ip_suspect, created = RejectList.objects.update_or_create(
+                    ip_address=ip_address,
+                    defaults={'zip_code': zip_code}
+                )
+
+                return JsonResponse({'success': True, 'message': 'Zip code saved successfully.'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Zip code not found in IP data.'}, status=400)
+        else:
+            return JsonResponse({'success': False, 'message': 'ip_address is required.'}, status=400)
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)}, status=500)

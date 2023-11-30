@@ -7,6 +7,12 @@ class RejectList(models.Model):
     def __str__(self):
         return str(self.ip_address)
 
+    def save_to_database(self):
+        self.save()
+
+    def delete_from_database(self):
+        self.delete()
+
 
 class AllowList(models.Model):
     ip_address = models.GenericIPAddressField(primary_key=True)
@@ -14,3 +20,9 @@ class AllowList(models.Model):
 
     def __str__(self):
         return str(self.ip_address)
+
+    def save_to_database(self):
+        self.save()
+
+    def delete_from_database(self):
+        self.delete()
